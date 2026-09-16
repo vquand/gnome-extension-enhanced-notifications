@@ -1,0 +1,10 @@
+{
+  "uuid": "notification-history@willdo",
+  "name": "Notification History",
+  "description": "Adds per-application notification counts and a searchable session history to GNOME Shell.",
+  "shell-version": [
+    "50"
+  ],
+  "url": "https://github.com/vquand/gnome-extension-enhanced-notifications",
+  "settings-schema": "org.gnome.shell.extensions.notification-history"
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.notification-history"
+          path="/org/gnome/shell/extensions/notification-history/">
+    <key name="cascade-read-apps" type="as">
+      <default>[]</default>
+      <summary>Applications with cascading read behavior</summary>
+      <description>
+        When an app is selected, activating one notification marks earlier
+        notifications from that same app as read.
+      </description>
+    </key>
+  </schema>
+</schemalist>

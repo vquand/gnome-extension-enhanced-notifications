@@ -1,0 +1,159 @@
+.notification-history-top-indicator {
+  spacing: 2px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.notification-history-top-icon {
+  icon-size: 14px;
+}
+
+.notification-history-top-count {
+  font-feature-settings: "tnum";
+  font-size: 0.85em;
+  font-weight: 700;
+  padding-right: 3px;
+}
+
+.notification-history-controls {
+  spacing: 8px;
+}
+
+.notification-history-button {
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.notification-history-button-content {
+  spacing: 6px;
+}
+
+.notification-history-dialog {
+  min-width: 700px;
+}
+
+.notification-history-settings-dialog {
+  min-width: 520px;
+}
+
+.notification-history-content {
+  min-width: 680px;
+  min-height: 480px;
+  spacing: 12px;
+}
+
+.notification-history-header {
+  spacing: 8px;
+}
+
+.notification-history-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.notification-history-description,
+.notification-history-group-count,
+.notification-history-row-time {
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.notification-history-icon-button {
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.notification-history-filters {
+  spacing: 8px;
+}
+
+.notification-history-search {
+  min-width: 20em;
+  padding: 8px 10px;
+}
+
+.notification-history-filter-button {
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.notification-history-filter-button.selected {
+  background-color: rgba(53, 132, 228, 0.42);
+}
+
+.notification-history-scroll {
+  min-height: 320px;
+}
+
+.notification-history-list,
+.notification-history-app-list {
+  spacing: 6px;
+}
+
+.notification-history-group-header {
+  spacing: 8px;
+  padding: 8px 4px 2px;
+}
+
+.notification-history-group-name,
+.notification-history-app-name {
+  font-weight: 700;
+}
+
+.notification-history-row {
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.notification-history-row:hover,
+.notification-history-row:focus {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.notification-history-row-read {
+  opacity: 0.7;
+}
+
+.notification-history-row-box {
+  spacing: 10px;
+}
+
+.notification-history-row-icon {
+  margin-top: 2px;
+}
+
+.notification-history-row-text {
+  spacing: 2px;
+}
+
+.notification-history-row-title {
+  font-weight: 700;
+}
+
+.notification-history-row-body {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.notification-history-row-time {
+  font-size: 0.82em;
+  padding-left: 8px;
+}
+
+.notification-history-empty {
+  color: rgba(255, 255, 255, 0.7);
+  padding: 24px;
+}
+
+.notification-history-app-row {
+  spacing: 10px;
+  padding: 10px 4px;
+}
+
+.notification-history-switch {
+  border-radius: 999px;
+  min-width: 48px;
+  padding: 6px 10px;
+}
+
+.notification-history-switch.selected {
+  background-color: rgba(53, 132, 228, 0.65);
+}
