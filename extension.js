@@ -1,4 +1,5 @@
 import Clutter from 'gi://Clutter';
+import GObject from 'gi://GObject';
 import Pango from 'gi://Pango';
 import St from 'gi://St';
 
@@ -301,6 +302,7 @@ class NotificationHistoryStore {
     }
 }
 
+const NotificationHistoryDialog = GObject.registerClass(
 class NotificationHistoryDialog extends ModalDialog.ModalDialog {
     constructor(store, handlers) {
         super({styleClass: 'notification-history-dialog'});
@@ -516,8 +518,9 @@ class NotificationHistoryDialog extends ModalDialog.ModalDialog {
         this._handlers = null;
         super.destroy();
     }
-}
+});
 
+const NotificationHistorySettingsDialog = GObject.registerClass(
 class NotificationHistorySettingsDialog extends ModalDialog.ModalDialog {
     constructor(store, onDone) {
         super({styleClass: 'notification-history-settings-dialog'});
@@ -620,7 +623,7 @@ class NotificationHistorySettingsDialog extends ModalDialog.ModalDialog {
         this._onDone = null;
         super.destroy();
     }
-}
+});
 
 export default class NotificationHistoryExtension extends Extension {
     enable() {
@@ -810,34 +813,49 @@ export default class NotificationHistoryExtension extends Extension {
     }
 
     _openHistory() {
-        if (!this._historyDialog) {
-            this._historyDialog = new NotificationHistoryDialog(this._store, {
-                close: () => {
-                    this._historyOpen = false;
-                },
-                settings: () => this._openSettings(true),
-            });
-        }
+        try {
+            if (!this._historyDialog) {
+                this._historyDialog = new NotificationHistoryDialog(this._store, {
+                    close: () => {
+                        this._historyOpen = false;
+                    },
+                    settings: () => this._openSettings(true),
+                });
+            }
 
-        this._historyOpen = true;
-        this._dateMenu?.menu?.close?.();
-        this._historyDialog.open();
+            this._historyOpen = true;
+            this._dateMenu?.menu?.close?.();
+            this._historyDialog.open();
+        } catch (error) {
+            logError(error, `${LOG_PREFIX} Could not open notification history`);
+            this._historyDialog?.destroy();
+            this._historyDialog = null;
+            this._historyOpen = false;
+            Main.notify('Notification History', 'Could not open notification history.');
+        }
     }
 
     _openSettings(reopenHistory = false) {
         if (this._settingsDialog)
             return;
 
-        this._historyDialog?.close();
-        this._settingsDialog = new NotificationHistorySettingsDialog(
-            this._store,
-            () => {
-                this._settingsDialog?.destroy();
-                this._settingsDialog = null;
-                if (reopenHistory)
-                    this._openHistory();
-            }
-        );
-        this._settingsDialog.open();
+        try {
+            this._historyDialog?.close();
+            this._settingsDialog = new NotificationHistorySettingsDialog(
+                this._store,
+                () => {
+                    this._settingsDialog?.destroy();
+                    this._settingsDialog = null;
+                    if (reopenHistory)
+                        this._openHistory();
+                }
+            );
+            this._settingsDialog.open();
+        } catch (error) {
+            logError(error, `${LOG_PREFIX} Could not open notification settings`);
+            this._settingsDialog?.destroy();
+            this._settingsDialog = null;
+            Main.notify('Notification History', 'Could not open notification settings.');
+        }
     }
 }

@@ -1,0 +1,20 @@
+# Generated packages are kept only when published under dist/.
+*.shell-extension.zip
+!dist/
+!dist/*.shell-extension.zip
+!dist/SHA256SUMS
+
+# Generated GNOME, test, and local development files.
+**/schemas/gschemas.compiled
+coverage/
+.cache/
+.env
+.env.*
+!.env.example
+.venv/
+node_modules/
+*.log
+*.swp
+.DS_Store
+.idea/
+.vscode/
