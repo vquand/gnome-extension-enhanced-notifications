@@ -450,7 +450,8 @@ export default class NotificationHistoryExtension extends Extension {
             x_align: Clutter.ActorAlign.END,
             accessible_name: 'Open notification history',
         });
-        this._historyButton.connect('clicked', () => this._openHistory());
+        this._historyButton.connectObject(
+            'clicked', () => this._openHistory(), this);
 
         if (parent.layout_manager?.orientation === Clutter.Orientation.HORIZONTAL) {
             parent.add_style_class_name('notification-history-controls');
@@ -488,6 +489,8 @@ export default class NotificationHistoryExtension extends Extension {
     _removeHistoryButton() {
         if (!this._historyButton)
             return;
+
+        this._historyButton.disconnectObject(this);
 
         if (this._historyFooter) {
             const parent = this._historyButtonParent;
@@ -541,9 +544,8 @@ export default class NotificationHistoryExtension extends Extension {
             if (!gjs)
                 throw new Error('gjs is not installed');
 
-            const applicationPath = GLib.build_filenamev([this.path, 'application.js']);
             this._applicationProcess = Gio.Subprocess.new(
-                [gjs, '-m', applicationPath],
+                ['gjs', '-m', `${this.path}/application.js`],
                 Gio.SubprocessFlags.NONE
             );
         } catch (error) {

@@ -25,6 +25,16 @@ assert.match(extensionSource, /Gio\.bus_unown_name/, 'disable must release the D
 assert.match(extensionSource, /Gio\.Subprocess\.new/);
 assert.match(
     extensionSource,
+    /this\._historyButton\.connectObject\(\s*'clicked'/,
+    'the history button signal must be owned by the extension for clean teardown'
+);
+assert.match(
+    extensionSource,
+    /Gio\.Subprocess\.new\(\s*\[\s*'gjs',\s*'-m',\s*`\$\{this\.path\}\/application\.js`\s*\]/,
+    'the GTK application launch must remain statically discoverable for packaging checks'
+);
+assert.match(
+    extensionSource,
     /for \(const source of Main\.messageTray\.getSources\(\)\)\s*this\._watchSource\(source, false\)/,
     'startup must watch existing sources without backfilling old notifications'
 );
@@ -48,6 +58,11 @@ assert.match(applicationSource, /Gtk\.EventControllerKey/, 'the window must hand
 assert.match(applicationSource, /Gdk\.KEY_Escape/, 'Escape must be the window close shortcut');
 assert.match(applicationSource, /this\._window\.close\(\)/, 'Escape must close the window');
 assert.match(applicationSource, /'SetCascadeApps'/, 'preferences must save selected applications');
+assert.match(
+    applicationSource,
+    /function main\(\)\s*\{[\s\S]*new NotificationHistoryApplication\(\)/,
+    'the separately launched GTK application must initialize from its entrypoint'
+);
 
 assert.match(schemaSource, /<key name="cascade-read-apps"/);
 assert.match(extensionSource, /get_strv\(CASCADE_APPS_KEY\)/, 'the extension must reload saved application settings');

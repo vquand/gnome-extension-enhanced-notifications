@@ -429,5 +429,9 @@ class NotificationHistoryApplication extends Adw.Application {
     }
 });
 
-const application = new NotificationHistoryApplication();
-application.run(ARGV);
+function main() {
+    const application = new NotificationHistoryApplication();
+    application.run(ARGV);
+}
+
+main();
