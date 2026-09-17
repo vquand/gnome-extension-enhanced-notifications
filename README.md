@@ -5,16 +5,19 @@ Keep a searchable history of notifications from the current GNOME session.
 ## Features
 
 - Show unread notification counts by application beside the top-bar clock.
-- Open a full notification history from the notification panel.
+- Open a full GTK 4/libadwaita window from the notification panel.
+- Switch between History and Preferences in the same window.
 - Start with unread notifications, or include read notifications.
 - Group by application or sort chronologically.
 - Search notification titles and content.
 - Choose per application whether opening a notification also marks earlier
   notifications from that application as read.
 
-Notification history is kept in memory for the current GNOME session. It is
-cleared when GNOME Shell or the extension restarts, and cannot recover
-notifications that were removed before the extension was enabled.
+Notification history is kept only in the GNOME Shell extension's memory. It is
+cleared on extension restart, Shell restart, logout, and login. After a restart,
+notifications that were already present are deliberately not imported into the
+new history. Per-application read-behavior preferences are stored in GSettings
+and persist across extension restarts.
 
 ## Install
 
