@@ -60,14 +60,17 @@ export function notificationRecord(notification, source, id, fallbackTimestamp =
         title: text(notification?.title),
         body: text(notification?.body),
         timestamp,
-        read: Boolean(notification?.acknowledged),
+        // Native Shell acknowledgement also changes when the notification
+        // list is opened. Read state is owned by the interaction handlers in
+        // extension.js so merely viewing the list does not mark a record read.
+        read: false,
         source: source ?? null,
         liveNotification: notification ?? null,
     };
 }
 
 export function recordIsRead(record) {
-    return Boolean(record?.read || record?.liveNotification?.acknowledged);
+    return Boolean(record?.read);
 }
 
 export function filterNotifications(records, options = {}) {

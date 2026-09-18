@@ -10,6 +10,8 @@ Keep a searchable history of notifications from the current GNOME session.
 - Start with unread notifications, or include read notifications.
 - Group by application or sort chronologically.
 - Search notification titles and content.
+- Follow native read state: opening the notification list does not mark an item
+  read; clicking or closing the notification does.
 - Choose per application whether opening a notification also marks earlier
   notifications from that application as read.
 

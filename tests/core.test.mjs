@@ -5,6 +5,7 @@ import {
     notificationFromTuple,
     notificationToTuple,
 } from '../contract.js';
+import {notificationRecord, recordIsRead} from '../core.js';
 
 assert.match(DBUS_XML, /a\(ssssssxbb\)/, 'both trailing state fields must be booleans');
 
@@ -33,7 +34,7 @@ assert.deepEqual(tuple, [
     'Build complete',
     'Everything passed',
     1_750_000_000n,
-    true,
+    false,
     true,
 ]);
 
@@ -45,7 +46,7 @@ assert.deepEqual(notificationFromTuple(tuple), {
     title: 'Build complete',
     body: 'Everything passed',
     timestamp: 1_750_000_000,
-    read: true,
+    read: false,
     canActivate: true,
 });
 
@@ -53,6 +54,26 @@ assert.equal(
     Object.values(notificationFromTuple(tuple)).includes(liveNotification),
     false,
     'the public snapshot must not expose live Shell objects'
+);
+
+assert.equal(
+    recordIsRead({read: false, liveNotification: {acknowledged: true}}),
+    false,
+    'opening the native notification list must not mark a record as read'
+);
+assert.equal(
+    recordIsRead({read: true, liveNotification: {acknowledged: false}}),
+    true,
+    'explicit interaction state must mark a record as read'
+);
+assert.equal(
+    notificationRecord(
+        {acknowledged: true, title: 'System notification'},
+        {title: 'System'},
+        7
+    ).read,
+    false,
+    'new records must start unread even if native acknowledged state is already set'
 );
 
 console.log('notification history core contract tests passed');

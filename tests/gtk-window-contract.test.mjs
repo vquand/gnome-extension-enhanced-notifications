@@ -45,6 +45,16 @@ assert.match(
 );
 assert.match(
     extensionSource,
+    /notification\.connect\('activated',[\s\S]*?record\.read = true/,
+    'native notification activation must mark the record read'
+);
+assert.match(
+    extensionSource,
+    /NotificationDestroyedReason\.DISMISSED/,
+    'only user-dismissed notifications must be marked read on destruction'
+);
+assert.match(
+    extensionSource,
     /_unwatchSource\(source,[\s\S]*?record\.source === source[\s\S]*?record\.source = null/,
     'historical records must release disposed Shell source objects'
 );

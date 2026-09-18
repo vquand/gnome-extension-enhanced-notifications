@@ -4,6 +4,7 @@ import GLib from 'gi://GLib';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {
@@ -256,13 +257,19 @@ class NotificationHistoryStore {
             this._refreshRecord(record, notification, source);
             this._notify();
         });
-        const destroyId = notification.connect('destroy', () => {
+        const activatedId = notification.connect('activated', () => {
+            record.read = true;
+            this._notify();
+        });
+        const destroyId = notification.connect('destroy', (_notification, reason) => {
+            if (reason === MessageTray.NotificationDestroyedReason.DISMISSED)
+                record.read = true;
             record.liveNotification = null;
             this._notificationSignalIds.delete(notification);
             this._recordByNotification.delete(notification);
             this._notify();
         });
-        this._notificationSignalIds.set(notification, [notifyId, destroyId]);
+        this._notificationSignalIds.set(notification, [notifyId, activatedId, destroyId]);
         this._notify();
     }
 
