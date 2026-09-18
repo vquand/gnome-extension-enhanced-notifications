@@ -100,6 +100,15 @@ export function recordIsRead(record) {
     return Boolean(record?.read);
 }
 
+export function markNotificationRemoved(record) {
+    if (!record)
+        return record;
+
+    record.read = true;
+    record.liveNotification = null;
+    return record;
+}
+
 export function filterNotifications(records, options = {}) {
     const showRead = Boolean(options.showRead);
     const chronological = Boolean(options.chronological);

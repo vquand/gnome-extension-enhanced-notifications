@@ -4,11 +4,11 @@ import GLib from 'gi://GLib';
 import St from 'gi://St';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {
     applicationSummaries,
+    markNotificationRemoved,
     markReadWithCascade,
     notificationRecord,
 } from './core.js';
@@ -261,10 +261,8 @@ class NotificationHistoryStore {
             record.read = true;
             this._notify();
         });
-        const destroyId = notification.connect('destroy', (_notification, reason) => {
-            if (reason === MessageTray.NotificationDestroyedReason.DISMISSED)
-                record.read = true;
-            record.liveNotification = null;
+        const destroyId = notification.connect('destroy', () => {
+            markNotificationRemoved(record);
             this._notificationSignalIds.delete(notification);
             this._recordByNotification.delete(notification);
             this._notify();

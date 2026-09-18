@@ -5,7 +5,11 @@ import {
     notificationFromTuple,
     notificationToTuple,
 } from '../contract.js';
-import {notificationRecord, recordIsRead} from '../core.js';
+import {
+    markNotificationRemoved,
+    notificationRecord,
+    recordIsRead,
+} from '../core.js';
 
 assert.match(DBUS_XML, /a\(ssssssxbb\)/, 'both trailing state fields must be booleans');
 
@@ -66,6 +70,23 @@ assert.equal(
     true,
     'explicit interaction state must mark a record as read'
 );
+
+const removedRecord = {
+    read: false,
+    liveNotification: {active: true},
+};
+markNotificationRemoved(removedRecord);
+assert.equal(
+    removedRecord.read,
+    true,
+    'a notification removed from the native center must no longer remain unread'
+);
+assert.equal(
+    removedRecord.liveNotification,
+    null,
+    'a removed notification must release its native notification object'
+);
+
 assert.equal(
     notificationRecord(
         {acknowledged: true, title: 'System notification'},

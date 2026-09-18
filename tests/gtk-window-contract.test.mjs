@@ -50,8 +50,13 @@ assert.match(
 );
 assert.match(
     extensionSource,
+    /connect\('destroy',[\s\S]*?markNotificationRemoved\(record\)/,
+    'every notification removed from the native center must be marked read'
+);
+assert.doesNotMatch(
+    extensionSource,
     /NotificationDestroyedReason\.DISMISSED/,
-    'only user-dismissed notifications must be marked read on destruction'
+    'native-center synchronization must not ignore non-dismissal removal reasons'
 );
 assert.match(
     extensionSource,
