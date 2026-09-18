@@ -90,4 +90,19 @@ assert.equal(
     'history records must prefer the application icon over the generic fallback'
 );
 
+const notificationIcon = {get_names: () => ['dialog-information-symbolic']};
+const appRecord = notificationRecord(
+    {gicon: notificationIcon, title: 'Message'},
+    {
+        title: 'Brave',
+        app: {get_icon: () => appIcon},
+    },
+    9
+);
+assert.equal(
+    appRecord.gicon,
+    appIcon,
+    'history indicators must prefer the application GIcon over the notification GIcon'
+);
+
 console.log('notification history core contract tests passed');

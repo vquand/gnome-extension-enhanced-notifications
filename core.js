@@ -76,14 +76,14 @@ export function notificationRecord(notification, source, id, fallbackTimestamp =
         notification?.iconName,
         ...themedIconNames(notification?.gicon)
     );
+    const appGIcon = source?.icon ?? source?.gicon ?? source?.app?.get_icon?.() ?? null;
 
     return {
         id: `${id}`,
         appId,
         appName: sourceAppName(source, appId),
         iconName: appIconName || notificationIconName || 'dialog-information-symbolic',
-        gicon: notification?.gicon ?? source?.icon ?? source?.gicon ??
-            source?.app?.get_icon?.() ?? null,
+        gicon: appGIcon ?? notification?.gicon ?? null,
         title: text(notification?.title),
         body: text(notification?.body),
         timestamp,

@@ -58,6 +58,21 @@ assert.match(
     /_unwatchSource\(source,[\s\S]*?record\.source === source[\s\S]*?record\.source = null/,
     'historical records must release disposed Shell source objects'
 );
+assert.match(
+    extensionSource,
+    /const insertIndex = clockBox\.get_children\(\)\.indexOf\(clockDisplay\);\s*clockBox\.insert_child_at_index\(this\._topIndicator, Math\.max\(0, insertIndex\)\)/,
+    'the notification indicator must be inserted before the centered clock'
+);
+assert.match(
+    extensionSource,
+    /this\._topIndicatorPad\.add_constraint\(new Clutter\.BindConstraint\(\{\s*source: this\._topIndicator,\s*coordinate: Clutter\.BindCoordinate\.SIZE,/,
+    'the clock must have a matching right-side size pad when the left indicator is visible'
+);
+assert.match(
+    extensionSource,
+    /this\._topIndicatorPad\.visible = this\._topIndicator\.visible/,
+    'the balancing pad must only reserve space while the indicator is visible'
+);
 
 assert.match(applicationSource, /Adw\.ApplicationWindow/);
 assert.match(applicationSource, /add_titled_with_icon\([\s\S]*'history',[\s\S]*'History',[\s\S]*'view-list-symbolic'/);

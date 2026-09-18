@@ -419,11 +419,20 @@ export default class NotificationHistoryExtension extends Extension {
             style_class: 'notification-history-top-indicator',
             y_align: Clutter.ActorAlign.CENTER,
         });
-        const insertIndex = clockBox.get_children().indexOf(clockDisplay) + 1;
+        this._topIndicatorPad = new St.Widget({visible: false});
+        this._topIndicatorPad.add_constraint(new Clutter.BindConstraint({
+            source: this._topIndicator,
+            coordinate: Clutter.BindCoordinate.SIZE,
+        }));
+        const insertIndex = clockBox.get_children().indexOf(clockDisplay);
         clockBox.insert_child_at_index(this._topIndicator, Math.max(0, insertIndex));
+        const padIndex = clockBox.get_children().indexOf(clockDisplay) + 1;
+        clockBox.insert_child_at_index(this._topIndicatorPad, Math.max(0, padIndex));
     }
 
     _removeTopBarIndicator() {
+        this._topIndicatorPad?.destroy();
+        this._topIndicatorPad = null;
         this._topIndicator?.destroy();
         this._topIndicator = null;
         if (this._originalIndicator) {
@@ -540,6 +549,8 @@ export default class NotificationHistoryExtension extends Extension {
             }
             this._topIndicator.visible = this._topIndicator.get_n_children() > 0 &&
                 !this._dateMenu?.menu?.isOpen;
+            if (this._topIndicatorPad)
+                this._topIndicatorPad.visible = this._topIndicator.visible;
         }
 
     }
