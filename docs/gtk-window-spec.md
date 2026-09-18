@@ -8,9 +8,16 @@ GTK 4/libadwaita application window. The window has **History** and
 notifications, retaining live notification objects, exposing unread counts in
 the panel, and opening the application window.
 
-Notification history is session-only. It must never be persisted, and a Shell
-restart, extension restart, logout, or login must always begin with an empty
-history.
+Read state stays aligned with the native notification center: opening the list
+does not mark a record read, while activating the notification or removing it
+from the native center does. Removal includes dismissal, expiry, replacement,
+and app/source closure.
+
+Notification history is session-only. It must never be persisted. An extension
+restart clears the in-memory records, then imports notifications still present
+in the native notification center so both lists remain aligned; a Shell
+restart, logout, or login begins with whatever notifications the native center
+retains.
 
 ## Tech Stack
 

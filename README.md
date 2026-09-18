@@ -10,14 +10,17 @@ Keep a searchable history of notifications from the current GNOME session.
 - Start with unread notifications, or include read notifications.
 - Group by application or sort chronologically.
 - Search notification titles and content.
+- Keep unread state aligned with the native center: opening the notification
+  list does not mark an item read, while activation or removal from the native
+  center does.
 - Choose per application whether opening a notification also marks earlier
   notifications from that application as read.
 
 Notification history is kept only in the GNOME Shell extension's memory. It is
-cleared on extension restart, Shell restart, logout, and login. After a restart,
-notifications that were already present are deliberately not imported into the
-new history. Per-application read-behavior preferences are stored in GSettings
-and persist across extension restarts.
+cleared on extension restart, Shell restart, logout, and login. Notifications
+still present in the native notification center are imported when the extension
+starts so the history matches the center. Per-application read-behavior
+preferences are stored in GSettings and persist across extension restarts.
 
 ## Install
 

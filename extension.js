@@ -8,6 +8,7 @@ import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import {
     applicationSummaries,
+    markNotificationRemoved,
     markReadWithCascade,
     notificationRecord,
 } from './core.js';
@@ -102,7 +103,7 @@ class NotificationHistoryStore {
         ));
 
         for (const source of Main.messageTray.getSources())
-            this._watchSource(source, false);
+            this._watchSource(source, true);
     }
 
     stop() {
@@ -256,13 +257,17 @@ class NotificationHistoryStore {
             this._refreshRecord(record, notification, source);
             this._notify();
         });
+        const activatedId = notification.connect('activated', () => {
+            record.read = true;
+            this._notify();
+        });
         const destroyId = notification.connect('destroy', () => {
-            record.liveNotification = null;
+            markNotificationRemoved(record);
             this._notificationSignalIds.delete(notification);
             this._recordByNotification.delete(notification);
             this._notify();
         });
-        this._notificationSignalIds.set(notification, [notifyId, destroyId]);
+        this._notificationSignalIds.set(notification, [notifyId, activatedId, destroyId]);
         this._notify();
     }
 
@@ -412,11 +417,20 @@ export default class NotificationHistoryExtension extends Extension {
             style_class: 'notification-history-top-indicator',
             y_align: Clutter.ActorAlign.CENTER,
         });
-        const insertIndex = clockBox.get_children().indexOf(clockDisplay) + 1;
+        this._topIndicatorPad = new St.Widget({visible: false});
+        this._topIndicatorPad.add_constraint(new Clutter.BindConstraint({
+            source: this._topIndicator,
+            coordinate: Clutter.BindCoordinate.SIZE,
+        }));
+        const insertIndex = clockBox.get_children().indexOf(clockDisplay);
         clockBox.insert_child_at_index(this._topIndicator, Math.max(0, insertIndex));
+        const padIndex = clockBox.get_children().indexOf(clockDisplay) + 1;
+        clockBox.insert_child_at_index(this._topIndicatorPad, Math.max(0, padIndex));
     }
 
     _removeTopBarIndicator() {
+        this._topIndicatorPad?.destroy();
+        this._topIndicatorPad = null;
         this._topIndicator?.destroy();
         this._topIndicator = null;
         if (this._originalIndicator) {
@@ -450,7 +464,8 @@ export default class NotificationHistoryExtension extends Extension {
             x_align: Clutter.ActorAlign.END,
             accessible_name: 'Open notification history',
         });
-        this._historyButton.connect('clicked', () => this._openHistory());
+        this._historyButton.connectObject(
+            'clicked', () => this._openHistory(), this);
 
         if (parent.layout_manager?.orientation === Clutter.Orientation.HORIZONTAL) {
             parent.add_style_class_name('notification-history-controls');
@@ -488,6 +503,8 @@ export default class NotificationHistoryExtension extends Extension {
     _removeHistoryButton() {
         if (!this._historyButton)
             return;
+
+        this._historyButton.disconnectObject(this);
 
         if (this._historyFooter) {
             const parent = this._historyButtonParent;
@@ -530,6 +547,8 @@ export default class NotificationHistoryExtension extends Extension {
             }
             this._topIndicator.visible = this._topIndicator.get_n_children() > 0 &&
                 !this._dateMenu?.menu?.isOpen;
+            if (this._topIndicatorPad)
+                this._topIndicatorPad.visible = this._topIndicator.visible;
         }
 
     }
@@ -541,9 +560,8 @@ export default class NotificationHistoryExtension extends Extension {
             if (!gjs)
                 throw new Error('gjs is not installed');
 
-            const applicationPath = GLib.build_filenamev([this.path, 'application.js']);
             this._applicationProcess = Gio.Subprocess.new(
-                [gjs, '-m', applicationPath],
+                ['gjs', '-m', `${this.path}/application.js`],
                 Gio.SubprocessFlags.NONE
             );
         } catch (error) {
