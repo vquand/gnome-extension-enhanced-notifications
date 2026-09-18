@@ -9,6 +9,27 @@ function firstText(...values) {
     return values.find(value => typeof value === 'string' && value.trim() !== '')?.trim() ?? '';
 }
 
+function themedIconNames(icon) {
+    try {
+        const names = icon?.get_names?.();
+        return Array.isArray(names) ? names : [];
+    } catch {
+        return [];
+    }
+}
+
+function sourceIconNames(source) {
+    try {
+        return [
+            ...themedIconNames(source?.icon),
+            ...themedIconNames(source?.gicon),
+            ...themedIconNames(source?.app?.get_icon?.()),
+        ];
+    } catch {
+        return [];
+    }
+}
+
 function datetimeToUnixSeconds(value) {
     if (typeof value === 'number' && Number.isFinite(value))
         return Math.floor(value);
@@ -50,13 +71,19 @@ export function notificationRecord(notification, source, id, fallbackTimestamp =
     const appId = sourceAppId(source);
     const timestamp = datetimeToUnixSeconds(notification?.datetime)
         ?? Math.floor(fallbackTimestamp / 1000);
+    const appIconName = firstText(source?.iconName, ...sourceIconNames(source));
+    const notificationIconName = firstText(
+        notification?.iconName,
+        ...themedIconNames(notification?.gicon)
+    );
 
     return {
         id: `${id}`,
         appId,
         appName: sourceAppName(source, appId),
-        iconName: firstText(notification?.iconName, source?.iconName, 'dialog-information-symbolic'),
-        gicon: notification?.gicon ?? source?.icon ?? source?.gicon ?? null,
+        iconName: appIconName || notificationIconName || 'dialog-information-symbolic',
+        gicon: notification?.gicon ?? source?.icon ?? source?.gicon ??
+            source?.app?.get_icon?.() ?? null,
         title: text(notification?.title),
         body: text(notification?.body),
         timestamp,

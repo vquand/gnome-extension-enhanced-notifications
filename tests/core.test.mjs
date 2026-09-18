@@ -76,4 +76,18 @@ assert.equal(
     'new records must start unread even if native acknowledged state is already set'
 );
 
+const appIcon = {get_names: () => ['brave-browser', 'web-browser']};
+assert.equal(
+    notificationRecord(
+        {title: 'Message'},
+        {
+            title: 'Brave',
+            app: {get_icon: () => appIcon},
+        },
+        8
+    ).iconName,
+    'brave-browser',
+    'history records must prefer the application icon over the generic fallback'
+);
+
 console.log('notification history core contract tests passed');
