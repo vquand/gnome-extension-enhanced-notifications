@@ -35,8 +35,8 @@ assert.match(
 );
 assert.match(
     extensionSource,
-    /for \(const source of Main\.messageTray\.getSources\(\)\)\s*this\._watchSource\(source, false\)/,
-    'startup must watch existing sources without backfilling old notifications'
+    /for \(const source of Main\.messageTray\.getSources\(\)\)\s*this\._watchSource\(source, true\)/,
+    'startup must capture notifications already present in the native center'
 );
 assert.match(
     extensionSource,

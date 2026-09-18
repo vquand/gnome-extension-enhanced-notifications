@@ -12,9 +12,11 @@ Read state follows explicit native notification interaction: opening the
 notification list does not mark a record read, while activating or dismissing
 the notification does.
 
-Notification history is session-only. It must never be persisted, and a Shell
-restart, extension restart, logout, or login must always begin with an empty
-history.
+Notification history is session-only. It must never be persisted. An extension
+restart clears the in-memory records, then imports notifications still present
+in the native notification center so both lists remain aligned; a Shell
+restart, logout, or login begins with whatever notifications the native center
+retains.
 
 ## Tech Stack
 

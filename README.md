@@ -16,10 +16,10 @@ Keep a searchable history of notifications from the current GNOME session.
   notifications from that application as read.
 
 Notification history is kept only in the GNOME Shell extension's memory. It is
-cleared on extension restart, Shell restart, logout, and login. After a restart,
-notifications that were already present are deliberately not imported into the
-new history. Per-application read-behavior preferences are stored in GSettings
-and persist across extension restarts.
+cleared on extension restart, Shell restart, logout, and login. Notifications
+still present in the native notification center are imported when the extension
+starts so the history matches the center. Per-application read-behavior
+preferences are stored in GSettings and persist across extension restarts.
 
 ## Install
 

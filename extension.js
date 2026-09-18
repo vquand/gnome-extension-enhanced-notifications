@@ -103,7 +103,7 @@ class NotificationHistoryStore {
         ));
 
         for (const source of Main.messageTray.getSources())
-            this._watchSource(source, false);
+            this._watchSource(source, true);
     }
 
     stop() {
